@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,6 +36,7 @@ import com.example.appmusic.comsable.ButtonClick
 import com.example.appmusic.comsable.ButtonClickNoborder
 import com.example.appmusic.comsable.InputType
 import com.example.appmusic.comsable.TextInput
+import com.example.appmusic.comsable.VideoPlay
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -43,15 +46,15 @@ import com.google.android.exoplayer2.ui.StyledPlayerView
 
 @Composable
 fun Login(videoUri: Uri){
-    val context = LocalContext.current
-    val exoPlayer = remember { context.buildExoPlayer(videoUri) }
+    //val context = LocalContext.current   dùng Exo
+    //val exoPlayer = remember { context.buildExoPlayer(videoUri) }
     val passwordFocusRequest:FocusRequester=FocusRequester()
     //passwordFocusRequest dùng để điều khiển focus đến trường nhập mật khẩu sau khi nhập xong tên
     val focusManager = LocalFocusManager.current
 
 
-
-    DisposableEffect(
+//ở đây dùng Exo
+    /*DisposableEffect(
         AndroidView(
             factory = { it.buildPlayerView(exoPlayer) },
             modifier = Modifier.fillMaxSize()
@@ -60,9 +63,10 @@ fun Login(videoUri: Uri){
         onDispose {
             exoPlayer.release()
         }
-    }
+    }*/
 
     Box(Modifier.imePadding()){
+        VideoPlay(videoUri = videoUri, modifier = Modifier.fillMaxHeight())
         // imePadding() có tác dụng thêm padding cho các thành phần giao diện khi bàn phím xuất hiện.
         Column( modifier = Modifier
             .padding(24.dp)
@@ -95,6 +99,8 @@ fun Login(videoUri: Uri){
 
     }
 }
+//ở đây dùng Exo
+/*
 private fun Context.buildExoPlayer(uri: Uri) =
     ExoPlayer.Builder(this).build().apply {
         setMediaItem(MediaItem.fromUri(uri))
@@ -119,3 +125,4 @@ private fun Context.buildPlayerView(exoPlayer: ExoPlayer) =
         useController = false
         resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
     }
+*/
