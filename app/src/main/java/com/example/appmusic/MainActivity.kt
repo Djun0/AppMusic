@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val videoUri =Uri.parse("android.resource://com.example.appmusic/raw/cloud")
+            val videoUri =Uri.parse("android.resource://com.example.appmusic/raw/tunnel")
             AppMusicTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
