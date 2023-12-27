@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.appmusic.navigation.AppRouter
 import com.example.appmusic.navigation.Screen
+import com.example.appmusic.screen.home.HomeScreen
 import com.example.appmusic.screen.login.LoginScreen
 import com.example.appmusic.screen.signup.SignUp
 import com.example.appmusic.screen.signup.TermAndConditionsScreen
@@ -29,6 +30,9 @@ fun GraphSignUp(){
                 }
                 is Screen.LoginScreen->{
                     LoginScreen(videoUri = videoUri)
+                }
+                is Screen.HomeScreen ->{
+                    HomeScreen()
                 }
             }
             

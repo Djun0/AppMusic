@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -23,6 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.appmusic.R
 import com.example.appmusic.comsable.ButtonClick
 import com.example.appmusic.comsable.ButtonClickNoborder
@@ -32,12 +35,15 @@ import com.example.appmusic.comsable.DividerTextComponent
 import com.example.appmusic.comsable.InputType
 import com.example.appmusic.comsable.TextInput
 import com.example.appmusic.comsable.VideoPlay
+import com.example.appmusic.data.LoginUIEvent
+import com.example.appmusic.data.LoginUIState
+import com.example.appmusic.data.LoginViewModel
 import com.example.appmusic.navigation.AppRouter
 import com.example.appmusic.navigation.Screen
 
 
 @Composable
-fun LoginScreen(videoUri: Uri){
+fun LoginScreen(videoUri: Uri,loginViewModel: LoginViewModel=viewModel()){
     //val context = LocalContext.current   dùng Exo
     //val exoPlayer = remember { context.buildExoPlayer(videoUri) }
     val passwordFocusRequest:FocusRequester=FocusRequester()
@@ -57,7 +63,8 @@ fun LoginScreen(videoUri: Uri){
         }
     }*/
 
-    Box(Modifier.imePadding()){
+    Box(Modifier.imePadding(), contentAlignment = Alignment.Center){
+
         VideoPlay(videoUri = videoUri, modifier = Modifier.fillMaxHeight())
         // imePadding() có tác dụng thêm padding cho các thành phần giao diện khi bàn phím xuất hiện.
         Column( modifier = Modifier
@@ -69,18 +76,23 @@ fun LoginScreen(videoUri: Uri){
         ) {
             Icon(painter = painterResource(id = R.drawable.app_logo), contentDescription = null,tint = Color.White,modifier=Modifier.size(80.dp))
             TextInput(
-                onValueChange ={},
+                onValueChange ={loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))},
                 inputType = InputType.Email,
-                keyboardActions = KeyboardActions(onNext = {passwordFocusRequest.requestFocus()} )
+                keyboardActions = KeyboardActions(onNext = {passwordFocusRequest.requestFocus()}),
+                errorStatus = loginViewModel.loginUIState.value.emailError
             )
             TextInput(
 
-                onValueChange ={},
+                onValueChange ={loginViewModel.onEvent(LoginUIEvent.PasswordChanged(it))},
                 inputType = InputType.LoginPassWord,
                 keyboardActions = KeyboardActions(onDone={focusManager.clearFocus()}),
-                focusRequester = passwordFocusRequest
+                focusRequester = passwordFocusRequest,
+                errorStatus = loginViewModel.loginUIState.value.passwordError
             )
-            ButtonClick(text = "Login")
+            ButtonClick(text = "Login", isEnabled = loginViewModel.allValidationPass.value,
+                onClick = {
+                    loginViewModel.onEvent(LoginUIEvent.LoginButtonClicked)
+                })
             DividerTextComponent()
 
             ClickableLoginComponent(tryingToLogin = false,text="Register",onTextSelected={
@@ -88,6 +100,9 @@ fun LoginScreen(videoUri: Uri){
 
             })
             Spacer(modifier = Modifier.padding(20.dp))
+        }
+        if(loginViewModel.loginInProgress.value){
+            CircularProgressIndicator()
         }
 
     }

@@ -1,20 +1,16 @@
 package com.example.appmusic.screen.signup
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material3.Divider
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +30,7 @@ import com.example.appmusic.comsable.DividerTextComponent
 import com.example.appmusic.comsable.InputType
 import com.example.appmusic.comsable.TextInput
 import com.example.appmusic.data.SignUpViewModel
-import com.example.appmusic.data.UiEvent
+import com.example.appmusic.data.SignupUIEvent
 import com.example.appmusic.navigation.AppRouter
 import com.example.appmusic.navigation.Screen
 import com.example.appmusic.navigation.SystemBackButtonHandler
@@ -50,7 +46,7 @@ fun SignUp(signUpViewModel: SignUpViewModel = viewModel()){
     val emailFocusRequest:FocusRequester=FocusRequester()
     //passwordFocusRequest dùng để điều khiển focus đến trường nhập mật khẩu sau khi nhập xong tên
     val focusManager = LocalFocusManager.current
-    Box(Modifier.imePadding()) {
+    Box(Modifier.imePadding(), contentAlignment = Alignment.Center) {
         // imePadding() có tác dụng thêm padding cho các thành phần giao diện khi bàn phím xuất hiện.
         Column(
             modifier = Modifier
@@ -71,27 +67,27 @@ fun SignUp(signUpViewModel: SignUpViewModel = viewModel()){
             )
             TextInput(
                 errorStatus = signUpViewModel.RegistrationUiState.value.userNameError ,
-                onValueChange = {signUpViewModel.onEvent(UiEvent.UserNameChanged(it))},
+                onValueChange = {signUpViewModel.onEvent(SignupUIEvent.UserNameChanged(it))},
                 inputType = InputType.CreateName,
                 keyboardActions = KeyboardActions(onNext = {emailFocusRequest.requestFocus() })
             )
             TextInput(
                 errorStatus = signUpViewModel.RegistrationUiState.value.emailError ,
-                onValueChange = {signUpViewModel.onEvent(UiEvent.EmailChanged(it))},
+                onValueChange = {signUpViewModel.onEvent(SignupUIEvent.EmailChanged(it))},
                 inputType = InputType.Email,
                 keyboardActions = KeyboardActions(onNext = { passwordFocusRequest.requestFocus() }),
                 focusRequester = emailFocusRequest
             )
             TextInput(
                 errorStatus = signUpViewModel.RegistrationUiState.value.passwordError ,
-                onValueChange = { signUpViewModel.onEvent(UiEvent.PasswordChanged(it))},
+                onValueChange = { signUpViewModel.onEvent(SignupUIEvent.PasswordChanged(it))},
                 inputType = InputType.CreatePassWord,
                 keyboardActions = KeyboardActions(onNext = { passwordRepeatFocusRequest.requestFocus() }),
                 focusRequester = passwordFocusRequest
             )
             TextInput(
                 errorStatus = signUpViewModel.RegistrationUiState.value.repeatPasswordError ,
-                onValueChange = {signUpViewModel.onEvent(UiEvent.RepeatPasswordChanged(it))},
+                onValueChange = {signUpViewModel.onEvent(SignupUIEvent.RepeatPasswordChanged(it))},
                 inputType = InputType.RepeatPassWord,
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 focusRequester = passwordRepeatFocusRequest
@@ -102,10 +98,10 @@ fun SignUp(signUpViewModel: SignUpViewModel = viewModel()){
                 onTextSelected={
                 AppRouter.navigateTo(Screen.TermAndConditionsScreen) },
                 onCheckChange = {
-                    signUpViewModel.onEvent(UiEvent.PrivacyPolicyCheckBoxClicked(it))
+                    signUpViewModel.onEvent(SignupUIEvent.PrivacyPolicyCheckBoxClicked(it))
                 }
                 )
-            ButtonClick(text = "Register", onClick = {signUpViewModel.onEvent(UiEvent.RegistrationButtonClicked)}, isEnabled = signUpViewModel.allValidationPass.value)
+            ButtonClick(text = "Register", onClick = {signUpViewModel.onEvent(SignupUIEvent.RegistrationButtonClicked)}, isEnabled = signUpViewModel.allValidationPass.value)
             DividerTextComponent()
             ClickableLoginComponent(tryingToLogin = true,text="Login",onTextSelected={
                 AppRouter.navigateTo(Screen.LoginScreen)
@@ -113,6 +109,11 @@ fun SignUp(signUpViewModel: SignUpViewModel = viewModel()){
             })
 
         }
+
+        if(signUpViewModel.signUpInProgress.value){
+            CircularProgressIndicator()
+        }
+
 
     }}
 @Preview
