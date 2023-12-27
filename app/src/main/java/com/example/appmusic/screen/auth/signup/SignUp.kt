@@ -1,4 +1,4 @@
-package com.example.appmusic.screen.signup
+package com.example.appmusic.screen.auth.signup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.appmusic.FbViewmodel
 import com.example.appmusic.R
 import com.example.appmusic.comsable.ButtonClick
 
@@ -29,7 +31,6 @@ import com.example.appmusic.comsable.ClickableLoginComponent
 import com.example.appmusic.comsable.DividerTextComponent
 import com.example.appmusic.comsable.InputType
 import com.example.appmusic.comsable.TextInput
-import com.example.appmusic.data.SignUpViewModel
 import com.example.appmusic.data.SignupUIEvent
 import com.example.appmusic.navigation.AppRouter
 import com.example.appmusic.navigation.Screen
@@ -37,10 +38,7 @@ import com.example.appmusic.navigation.SystemBackButtonHandler
 
 
 @Composable
-fun SignUp(signUpViewModel: SignUpViewModel = viewModel()){
-    SystemBackButtonHandler {
-        AppRouter.navigateTo(Screen.LoginScreen)
-    }
+fun SignUp(signUpViewModel: SignUpViewModel = viewModel(),navController:NavController,vm: FbViewmodel){
     val passwordFocusRequest:FocusRequester=FocusRequester()
     val passwordRepeatFocusRequest:FocusRequester=FocusRequester()
     val emailFocusRequest:FocusRequester=FocusRequester()
@@ -96,28 +94,26 @@ fun SignUp(signUpViewModel: SignUpViewModel = viewModel()){
             CheckBoxComponent(
                 text="By continuing you are indicating that you accept",
                 onTextSelected={
-                AppRouter.navigateTo(Screen.TermAndConditionsScreen) },
+                    navController.navigate(Screen.TermAndConditionsScreen.route) },
                 onCheckChange = {
                     signUpViewModel.onEvent(SignupUIEvent.PrivacyPolicyCheckBoxClicked(it))
                 }
                 )
-            ButtonClick(text = "Register", onClick = {signUpViewModel.onEvent(SignupUIEvent.RegistrationButtonClicked)}, isEnabled = signUpViewModel.allValidationPass.value)
+            ButtonClick(text = "Register", onClick = {
+                                                        vm.onSignup(signUpViewModel.RegistrationUiState.value.email,signUpViewModel.RegistrationUiState.value.password)
+                                                        if(vm.flagSuccess.value) navController.navigate(Screen.SuccessScreen.route)
+                                                     },
+                isEnabled = signUpViewModel.allValidationPass.value)
             DividerTextComponent()
             ClickableLoginComponent(tryingToLogin = true,text="Login",onTextSelected={
-                AppRouter.navigateTo(Screen.LoginScreen)
-
+                navController.navigate(Screen.LoginScreen.route)
             })
 
         }
 
-        if(signUpViewModel.signUpInProgress.value){
+        if(vm.inProgress.value){
             CircularProgressIndicator()
         }
 
 
     }}
-@Preview
-@Composable
-fun Test(){
-    SignUp()
-}

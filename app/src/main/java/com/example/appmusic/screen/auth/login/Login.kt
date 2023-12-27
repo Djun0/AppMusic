@@ -1,10 +1,9 @@
-package com.example.appmusic.screen.login
+package com.example.appmusic.screen.auth.login
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,10 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -24,11 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.appmusic.FbViewmodel
 import com.example.appmusic.R
 import com.example.appmusic.comsable.ButtonClick
-import com.example.appmusic.comsable.ButtonClickNoborder
 import com.example.appmusic.comsable.ClickableLoginComponent
 import com.example.appmusic.comsable.DividerTextComponent
 
@@ -36,21 +35,18 @@ import com.example.appmusic.comsable.InputType
 import com.example.appmusic.comsable.TextInput
 import com.example.appmusic.comsable.VideoPlay
 import com.example.appmusic.data.LoginUIEvent
-import com.example.appmusic.data.LoginUIState
-import com.example.appmusic.data.LoginViewModel
 import com.example.appmusic.navigation.AppRouter
 import com.example.appmusic.navigation.Screen
 
 
 @Composable
-fun LoginScreen(videoUri: Uri,loginViewModel: LoginViewModel=viewModel()){
+fun LoginScreen(videoUri: Uri, loginViewModel: LoginViewModel =viewModel(),navController: NavController, vm: FbViewmodel){
+    val loginUIState by vm.loginUIState.collectAsState()
     //val context = LocalContext.current   dùng Exo
     //val exoPlayer = remember { context.buildExoPlayer(videoUri) }
     val passwordFocusRequest:FocusRequester=FocusRequester()
     //passwordFocusRequest dùng để điều khiển focus đến trường nhập mật khẩu sau khi nhập xong tên
     val focusManager = LocalFocusManager.current
-
-
 //ở đây dùng Exo
     /*DisposableEffect(
         AndroidView(
@@ -62,9 +58,7 @@ fun LoginScreen(videoUri: Uri,loginViewModel: LoginViewModel=viewModel()){
             exoPlayer.release()
         }
     }*/
-
     Box(Modifier.imePadding(), contentAlignment = Alignment.Center){
-
         VideoPlay(videoUri = videoUri, modifier = Modifier.fillMaxHeight())
         // imePadding() có tác dụng thêm padding cho các thành phần giao diện khi bàn phím xuất hiện.
         Column( modifier = Modifier
@@ -91,17 +85,18 @@ fun LoginScreen(videoUri: Uri,loginViewModel: LoginViewModel=viewModel()){
             )
             ButtonClick(text = "Login", isEnabled = loginViewModel.allValidationPass.value,
                 onClick = {
-                    loginViewModel.onEvent(LoginUIEvent.LoginButtonClicked)
+                    //loginViewModel.onEvent(LoginUIEvent.LoginButtonClicked)
+                    vm.login(email =loginViewModel.loginUIState.value.email , password =loginViewModel.loginUIState.value.password )
+                        if(!loginUIState.loginFail) {navController.navigate(Screen.HomeScreen.route)}
                 })
             DividerTextComponent()
 
             ClickableLoginComponent(tryingToLogin = false,text="Register",onTextSelected={
-                AppRouter.navigateTo(Screen.SignUpScreen)
-
+                navController.navigate(Screen.SignUpScreen.route)
             })
             Spacer(modifier = Modifier.padding(20.dp))
         }
-        if(loginViewModel.loginInProgress.value){
+        if(vm.inProgress.value){
             CircularProgressIndicator()
         }
 

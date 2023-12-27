@@ -1,4 +1,4 @@
-package com.example.appmusic.screen.signup
+package com.example.appmusic.screen.auth.signup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,9 +24,6 @@ fun TermAndConditionsScreen(){
         .background(color = Color.White)
         .padding(16.dp)) {
         Text(text="Term of Use", modifier = Modifier.fillMaxWidth(), fontSize = 30.sp, textAlign = TextAlign.Center)
-    }
-    SystemBackButtonHandler {
-        AppRouter.navigateTo(Screen.SignUpScreen)
     }
 }
 @Preview
