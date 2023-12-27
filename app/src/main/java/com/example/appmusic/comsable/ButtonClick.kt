@@ -77,12 +77,17 @@ fun ClickableComponent(text: String,onTextSelected:(String)->Unit)
     val andText = "and "
     val termsAndConditionsText ="Term of Use"
     val annotatedString = buildAnnotatedString {
-        append(initialText)
+        withStyle(SpanStyle(color = Color.White)) {  // Apply desired color here
+            append(initialText)
+        }
         withStyle(SpanStyle(Color.Cyan)){
             pushStringAnnotation(tag=privacyPolicyText, annotation = privacyPolicyText)
             append(privacyPolicyText)
         }
-        append(andText)
+        withStyle(SpanStyle(color = Color.White)) {  // Apply desired color here
+            append(andText)
+        }
+
         withStyle(SpanStyle(Color.Cyan)){
             pushStringAnnotation(tag=termsAndConditionsText, annotation = termsAndConditionsText)
             append(termsAndConditionsText)
@@ -120,7 +125,10 @@ fun ClickableLoginComponent(text: String,onTextSelected:(String)->Unit,tryingToL
     val initialText= if(tryingToLogin) "Already have an account? " else "Don't have an account yet? "
     val loginText = if(tryingToLogin) "Login" else "Register"
     val annotatedString = buildAnnotatedString {
-        append(initialText)
+        withStyle(SpanStyle(color = Color.White)) {  // Apply desired color here
+            append(initialText)
+        }
+
         withStyle(SpanStyle(Color.Cyan)){
             pushStringAnnotation(tag=loginText, annotation = loginText)
             append(loginText)

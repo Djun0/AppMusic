@@ -20,6 +20,8 @@ import javax.inject.Inject
 class FbViewmodel @Inject constructor(val auth: FirebaseAuth):ViewModel(){
     var _loginUIState = MutableStateFlow(LoginUIState())
     val loginUIState: StateFlow<LoginUIState> = _loginUIState.asStateFlow()
+
+
     val signedIn = mutableStateOf(false)
     val inProgress = mutableStateOf(false)
     val popupNotification = mutableStateOf<Event<String>?>(null)

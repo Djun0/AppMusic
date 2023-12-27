@@ -1,9 +1,11 @@
 package com.example.appmusic.screen.auth.signup
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -31,6 +33,7 @@ import com.example.appmusic.comsable.ClickableLoginComponent
 import com.example.appmusic.comsable.DividerTextComponent
 import com.example.appmusic.comsable.InputType
 import com.example.appmusic.comsable.TextInput
+import com.example.appmusic.comsable.VideoPlay
 import com.example.appmusic.data.SignupUIEvent
 import com.example.appmusic.navigation.AppRouter
 import com.example.appmusic.navigation.Screen
@@ -38,13 +41,14 @@ import com.example.appmusic.navigation.SystemBackButtonHandler
 
 
 @Composable
-fun SignUp(signUpViewModel: SignUpViewModel = viewModel(),navController:NavController,vm: FbViewmodel){
+fun SignUp(videoUri: Uri, signUpViewModel: SignUpViewModel = viewModel(), navController:NavController, vm: FbViewmodel){
     val passwordFocusRequest:FocusRequester=FocusRequester()
     val passwordRepeatFocusRequest:FocusRequester=FocusRequester()
     val emailFocusRequest:FocusRequester=FocusRequester()
     //passwordFocusRequest dùng để điều khiển focus đến trường nhập mật khẩu sau khi nhập xong tên
     val focusManager = LocalFocusManager.current
     Box(Modifier.imePadding(), contentAlignment = Alignment.Center) {
+        VideoPlay(videoUri = videoUri, modifier = Modifier.fillMaxHeight())
         // imePadding() có tác dụng thêm padding cho các thành phần giao diện khi bàn phím xuất hiện.
         Column(
             modifier = Modifier
@@ -101,7 +105,7 @@ fun SignUp(signUpViewModel: SignUpViewModel = viewModel(),navController:NavContr
                 )
             ButtonClick(text = "Register", onClick = {
                                                         vm.onSignup(signUpViewModel.RegistrationUiState.value.email,signUpViewModel.RegistrationUiState.value.password)
-                                                        if(vm.flagSuccess.value) navController.navigate(Screen.SuccessScreen.route)
+                                                        if(vm.flagSuccess.value) navController.navigate(Screen.LoginScreen.route)
                                                      },
                 isEnabled = signUpViewModel.allValidationPass.value)
             DividerTextComponent()

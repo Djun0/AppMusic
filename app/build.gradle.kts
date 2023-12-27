@@ -75,6 +75,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+
     implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.28")
 
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
@@ -86,5 +87,8 @@ dependencies {
     implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
     kapt("com.google.dagger:hilt-android-compiler:2.45")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    //coli
+    implementation("io.coil-kt:coil-compose:2.2.2")
 
 }

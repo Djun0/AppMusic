@@ -9,6 +9,7 @@ sealed class Screen(val route:String){
     object LoginScreen:Screen("Login")
     object HomeScreen:Screen("Home")
     object SuccessScreen:Screen("success")
+    object  HomeScreenPlay:Screen("play")
 }
 object AppRouter{
     var currentScreen: MutableState<Screen> = mutableStateOf(Screen.LoginScreen)

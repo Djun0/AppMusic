@@ -87,7 +87,7 @@ fun LoginScreen(videoUri: Uri, loginViewModel: LoginViewModel =viewModel(),navCo
                 onClick = {
                     //loginViewModel.onEvent(LoginUIEvent.LoginButtonClicked)
                     vm.login(email =loginViewModel.loginUIState.value.email , password =loginViewModel.loginUIState.value.password )
-                        if(!loginUIState.loginFail) {navController.navigate(Screen.HomeScreen.route)}
+                        if(!loginUIState.loginFail) {navController.navigate(Screen.HomeScreenPlay.route)}
                 })
             DividerTextComponent()
 
