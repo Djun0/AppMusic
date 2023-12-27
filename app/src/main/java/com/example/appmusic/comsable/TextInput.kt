@@ -1,5 +1,6 @@
 package com.example.appmusic.comsable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -10,14 +11,17 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 
 
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -28,32 +32,34 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.appmusic.ui.theme.textIn
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextInput(onValueChange:(String)->Unit, inputType: InputType, focusRequester: FocusRequester?=null, keyboardActions: KeyboardActions){
+fun TextInput(errorStatus:Boolean= false,onValueChange:(String)->Unit, inputType: InputType, focusRequester: FocusRequester?=null, keyboardActions: KeyboardActions){
 
-    val textValue = remember { mutableStateOf("") }
-    TextField(value =textValue.value,
+    var textValue by remember { mutableStateOf("") }
+    OutlinedTextField(value =textValue,
         onValueChange = {
-            textValue.value=it
+            textValue=it
             onValueChange(it)
                         },
         modifier = Modifier.fillMaxWidth().focusRequester(focusRequester?: FocusRequester()),//focusRequester để điều khiển focus.
         leadingIcon = {Icon(imageVector = inputType.icon, contentDescription = null)}, //Biểu tượng hiển thị bên trái trường nhập liệu.
         label= { Text(text = inputType.label)},
-        shape = RoundedCornerShape(32.dp),//Hình dạng của TextField (được thiết lập là RoundedCornerShape với góc bo tròn 8dp).
+         shape = RoundedCornerShape(32.dp),//Hình dạng của TextField (được thiết lập là RoundedCornerShape với góc bo tròn 8dp).
         colors = TextFieldDefaults.textFieldColors(
             containerColor = Color.White,
-            focusedIndicatorColor = Color.Transparent,//Màu của chỉ báo focus.
-            unfocusedIndicatorColor = Color.Transparent,//Màu của chỉ báo khi không focus.
-            disabledIndicatorColor =  Color.Transparent//Màu của chỉ báo khi TextField bị vô hiệu hóa.
+            focusedIndicatorColor = Color(0xFFADAFAD),//Màu của chỉ báo focus.
+            unfocusedIndicatorColor = Color(0xFFADAFAD),//Màu của chỉ báo khi không focus.
+            disabledIndicatorColor =  Color(0xFFADAFAD)//Màu của chỉ báo khi TextField bị vô hiệu hóa.
         ),
         singleLine = true,// Giới hạn nhập liệu chỉ một dòng.
         keyboardOptions = inputType.keyboardOptions,//  Các tùy chọn bàn phím, lấy từ đối tượng InputType
         visualTransformation = inputType.visualTransformation,//Chuyển đổi hiển thị, lấy từ đối tượng InputType
-        keyboardActions = keyboardActions //Xử lý các hành động của bàn phím.
+        keyboardActions = keyboardActions, //Xử lý các hành động của bàn phím.
+        isError = !errorStatus
         )
 }
 //Cấu hình trường nhập liệu

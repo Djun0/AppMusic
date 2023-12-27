@@ -7,6 +7,7 @@ sealed class Screen(){
     object SignUpScreen:Screen()
     object TermAndConditionsScreen:Screen()
     object LoginScreen:Screen()
+    object HomeScreen:Screen()
 }
 object AppRouter{
     var currentScreen: MutableState<Screen> = mutableStateOf(Screen.LoginScreen)

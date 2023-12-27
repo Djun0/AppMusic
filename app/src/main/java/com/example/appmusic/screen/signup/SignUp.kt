@@ -70,33 +70,42 @@ fun SignUp(signUpViewModel: SignUpViewModel = viewModel()){
                 modifier = Modifier.size(80.dp)
             )
             TextInput(
+                errorStatus = signUpViewModel.RegistrationUiState.value.userNameError ,
                 onValueChange = {signUpViewModel.onEvent(UiEvent.UserNameChanged(it))},
                 inputType = InputType.CreateName,
                 keyboardActions = KeyboardActions(onNext = {emailFocusRequest.requestFocus() })
             )
             TextInput(
+                errorStatus = signUpViewModel.RegistrationUiState.value.emailError ,
                 onValueChange = {signUpViewModel.onEvent(UiEvent.EmailChanged(it))},
                 inputType = InputType.Email,
                 keyboardActions = KeyboardActions(onNext = { passwordFocusRequest.requestFocus() }),
                 focusRequester = emailFocusRequest
             )
             TextInput(
+                errorStatus = signUpViewModel.RegistrationUiState.value.passwordError ,
                 onValueChange = { signUpViewModel.onEvent(UiEvent.PasswordChanged(it))},
                 inputType = InputType.CreatePassWord,
                 keyboardActions = KeyboardActions(onNext = { passwordRepeatFocusRequest.requestFocus() }),
                 focusRequester = passwordFocusRequest
             )
             TextInput(
+                errorStatus = signUpViewModel.RegistrationUiState.value.repeatPasswordError ,
                 onValueChange = {signUpViewModel.onEvent(UiEvent.RepeatPasswordChanged(it))},
                 inputType = InputType.RepeatPassWord,
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 focusRequester = passwordRepeatFocusRequest
             )
             Spacer(modifier = Modifier.padding(20.dp))
-            CheckBoxComponent(text="By continuing you are indicating that you accept", onTextSelected={
-                AppRouter.navigateTo(Screen.TermAndConditionsScreen)
-            })
-            ButtonClick(text = "Register")
+            CheckBoxComponent(
+                text="By continuing you are indicating that you accept",
+                onTextSelected={
+                AppRouter.navigateTo(Screen.TermAndConditionsScreen) },
+                onCheckChange = {
+                    signUpViewModel.onEvent(UiEvent.PrivacyPolicyCheckBoxClicked(it))
+                }
+                )
+            ButtonClick(text = "Register", onClick = {signUpViewModel.onEvent(UiEvent.RegistrationButtonClicked)}, isEnabled = signUpViewModel.allValidationPass.value)
             DividerTextComponent()
             ClickableLoginComponent(tryingToLogin = true,text="Login",onTextSelected={
                 AppRouter.navigateTo(Screen.LoginScreen)

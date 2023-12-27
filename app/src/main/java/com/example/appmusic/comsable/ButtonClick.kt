@@ -17,8 +17,10 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -38,7 +40,7 @@ import com.example.appmusic.ui.theme.Secondary
 
 @Composable
 fun ButtonClick(onClick: () -> Unit = { /*TODO*/ }, text:String, isEnabled:Boolean= false){
-    Button(onClick = onClick, modifier = Modifier
+    Button(onClick = { onClick.invoke() }, modifier = Modifier
         .fillMaxWidth()
         .heightIn(48.dp),
         contentPadding = PaddingValues(),
@@ -97,14 +99,18 @@ fun ClickableComponent(text: String,onTextSelected:(String)->Unit)
  } )
 }
 @Composable
-fun CheckBoxComponent(text: String,onTextSelected:(String)->Unit){
+fun CheckBoxComponent(text: String,onTextSelected:(String)->Unit, onCheckChange: (Boolean)->Unit){
     Row(modifier= Modifier
         .heightIn(56.dp)
         .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ){
-        val checkedState = remember { mutableStateOf(false) }
-        Checkbox(checked =checkedState.value , onCheckedChange = {checkedState!=checkedState})
+        var checkedState by remember { mutableStateOf(false) }
+        Checkbox(checked =checkedState
+            , onCheckedChange = {
+                checkedState=!checkedState
+                onCheckChange.invoke(it)
+            })
         ClickableComponent(text=text,onTextSelected)
     }
 }
