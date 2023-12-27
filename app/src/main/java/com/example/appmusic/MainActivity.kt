@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.appmusic.screen.Login
+import com.example.appmusic.navigateapp.GraphSignUp
+
+import com.example.appmusic.screen.signup.SignUp
 import com.example.appmusic.ui.theme.AppMusicTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,10 +21,10 @@ class MainActivity : ComponentActivity() {
             AppMusicTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    Login(getVideoUri())
+                    GraphSignUp()
+                        //Login(videoUri=videoUri)
                 }
             }
         }
